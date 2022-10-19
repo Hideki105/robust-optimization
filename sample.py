@@ -1,6 +1,6 @@
 import numpy as np
-from robustopt import drlr_cxvpy
-from robustopt import lr
+from robustopt.dro import drlr_cxvpy
+from robustopt.dro import lr
 
 def sigmoid(z):
   return 1/(1 + np.exp(-z))
@@ -25,7 +25,7 @@ def test_dataset():
     beta_true = beta_true.reshape(M,1)
     x = x.reshape(N,M)
 
-    y = np.round(sigmoid(x@beta_true + np.random.randn(N,1)*0.5))
+    y = np.round(sigmoid(x@beta_true + np.random.randn(N,1)*5))
     y = y.reshape(N,1)
     return x,y,beta_true
 
