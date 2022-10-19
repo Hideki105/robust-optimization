@@ -18,25 +18,25 @@ class dr_logistic_regression():
     s       = cp.Variable((self.N,1))
 
     constraints = [
-                cp.logistic( cp.multiply(-self.y,self.x@beta_) ) <= s 
+                 cp.logistic( cp.multiply(-self.y,self.x@beta_) ) <= s 
                 ,cp.logistic( cp.multiply(+self.y,self.x@beta_) ) - lambda_*self.kappa <= s
                 ,cp.norm(beta_, self.pnorm)<=lambda_
                   ]
 
-    objective = lambda_*self.epsilon + 1/self.N*sum(s)
+    objective = lambda_*self.epsilon + 1/self.N*cp.sum(s)
 
     problem = cp.Problem(cp.Minimize(objective),constraints)
     problem.solve(verbose=False)
     self.beta_ = beta_.value
-    return beta_.value,lambda_.value,s.value
+    return problem.value,beta_.value,lambda_.value,s.value
     
   def infer(self,x):
       y_est = []
-      for i in 1/(1+np.exp(x@self.beta_)):
-        if i>0.5:
-          y_est.append(0)
-        if i<=0.5:
+      for i in 1/(1+np.exp(-x@self.beta_)):
+        if i>=0.5:
           y_est.append(1)
+        if i<0.5:
+          y_est.append(-1)
       self.y_est = y_est
       return y_est
     
