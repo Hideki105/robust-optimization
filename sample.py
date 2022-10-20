@@ -24,11 +24,6 @@ def train_dataset():
 
     y = label(np.round(sigmoid(x@beta_true)))
     y = y.reshape(N,1)
-
-    for i in np.random.randint(1,N,(5,1)):
-        y[i] = -1
-    for i in np.random.randint(1,N,(5,1)):
-        y[i] = 1
     return x,y,beta_true
 
 def test_dataset():
@@ -47,7 +42,7 @@ def main():
     x_train,y_train,_ = train_dataset()
     x_test ,y_test ,_ = test_dataset()
 
-    epsilon = 1e-1
+    epsilon = 1e-5
     kappa   = 1
     pnorm   = 2
     drlr = drlr_cxvpy.dr_logistic_regression(epsilon,kappa,pnorm)
@@ -61,8 +56,8 @@ def main():
     print(C)
 
     pnorm = 2
-    lambd = 1e-3
-    lr_ = lr.logistic_regression(pnorm,lambd)
+    epsilon = 1e-5
+    lr_ = lr.logistic_regression(pnorm,epsilon)
     lr_.fit(x_train,y_train)
     
     y_est = lr_.infer(x_train)

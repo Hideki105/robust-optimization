@@ -3,9 +3,9 @@ import cvxpy as cp
 from sklearn.metrics import confusion_matrix
 
 class logistic_regression():
-    def __init__(self,pnorm,lambd):
+    def __init__(self,pnorm,epsilon):
         self.pnorm = pnorm
-        self.lambd = lambd
+        self.epsilon = epsilon
 
     def fit(self,x,y):
         self.N = x.shape[0]
@@ -15,7 +15,7 @@ class logistic_regression():
         beta = cp.Variable((self.M,1))
         
         log_likelihood = cp.sum(cp.logistic( cp.multiply(-self.y,self.x@beta) ))
-        problem = cp.Problem(cp.Minimize(log_likelihood/self.N + self.lambd * cp.norm(beta, self.pnorm)))
+        problem = cp.Problem(cp.Minimize(log_likelihood/self.N + self.epsilon * cp.norm(beta, self.pnorm)))
         problem.solve(verbose=False)
         self.beta = beta.value
         return problem.value,beta.value
